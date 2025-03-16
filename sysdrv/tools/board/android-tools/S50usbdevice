@@ -64,6 +64,8 @@ function_init()
 	mkdir ${USB_FUNCTIONS_DIR}/mass_storage.0
 	mkdir ${USB_FUNCTIONS_DIR}/uvc.gs6
 	mkdir ${USB_FUNCTIONS_DIR}/hid.usb0
+	mkdir ${USB_FUNCTIONS_DIR}/gser.0
+	mkdir ${USB_FUNCTIONS_DIR}/gser.1
 }
 
 configfs_init()
@@ -73,7 +75,7 @@ configfs_init()
 
 	mount -t configfs none ${CONFIGFS_DIR}
 	mkdir ${USB_CONFIGFS_DIR} -m 0770
-	echo 0x2207 > ${USB_CONFIGFS_DIR}/idVendor
+	echo 0x1e0e > ${USB_CONFIGFS_DIR}/idVendor
 	echo 0x0310 > ${USB_CONFIGFS_DIR}/bcdDevice
 	echo 0x0200 > ${USB_CONFIGFS_DIR}/bcdUSB
 	mkdir ${USB_STRINGS_DIR}   -m 0770
@@ -82,8 +84,8 @@ configfs_init()
 		SERIAL=0123456789ABCDEF
 	fi
 	echo $SERIAL > ${USB_STRINGS_DIR}/serialnumber
-	echo "rockchip"  > ${USB_STRINGS_DIR}/manufacturer
-	echo "rk3xxx"  > ${USB_STRINGS_DIR}/product
+	echo "Slomblobov"  > ${USB_STRINGS_DIR}/manufacturer
+	echo "Gustav"  > ${USB_STRINGS_DIR}/product
 
 	function_init
 
@@ -236,6 +238,8 @@ pre_run_binary()
 		# Not start app here
 	fi
 
+	start-stop-daemon --start --quiet --background --exec /usr/sbin/gustavd /dev/ttyGS2
+
 	# Add uvc app here with start-stop-daemon
 }
 
@@ -336,6 +340,8 @@ bind_functions()
 	fi
 
 	test $RNDIS_EN = on && syslink_function rndis.gs0
+	syslink_function gser.0
+	syslink_function gser.1
 	test $MTP_EN = on && syslink_function mtp.gs0
 	test $NTB_EN = on && syslink_function ffs.ntb
 	test $ADB_EN = on && syslink_function ffs.adb
@@ -376,7 +382,7 @@ run_binary()
 	if [ $RNDIS_EN = on ];then
 
 	sleep .5
-	ifconfig usb0 172.32.0.70
+	#ifconfig usb0 172.32.0.70
 	ifconfig usb0 up
 	fi
 
@@ -417,12 +423,15 @@ start)
 #	fi
 	test -d ${USB_CONFIGFS_DIR} || configfs_init
 	use_os_desc
-	echo $PID > ${USB_CONFIGFS_DIR}/idProduct
+#	echo $PID > ${USB_CONFIGFS_DIR}/idProduct
+	echo 0x9011 > ${USB_CONFIGFS_DIR}/idProduct
 	bind_functions
 	pre_run_binary
+
 	sleep 1
 	UDC=`ls /sys/class/udc/| awk '{print $1}'`
 	echo $UDC > ${USB_CONFIGFS_DIR}/UDC
+	#echo $UDC > ${CONFIGFS_DIR}/usb_gadget/g1/UDC
 	run_binary
 	;;
 stop)

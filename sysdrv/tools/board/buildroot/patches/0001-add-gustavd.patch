@@ -1,0 +1,12 @@
+diff --git a/package/Config.in b/package/Config.in
+index e9e8d93..4671ef7 100644
+--- a/package/Config.in
++++ b/package/Config.in
+@@ -2539,6 +2539,7 @@ endif
+ 	source "package/zabbix/Config.in"
+ 	source "package/zeek/Config.in"
+ 	source "package/znc/Config.in"
++	source "package/gustavd/Config.in"
+ 
+ endmenu
+ 

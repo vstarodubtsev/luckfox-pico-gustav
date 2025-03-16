@@ -608,6 +608,7 @@ buildroot_create:
 	cp ${HCITOOL_TOOL_PATH}/0002-Fix-build-errors.patch $(BUILDROOT_DIR)/$(BUILDROOT_VER)/package/bluez5_utils/
 	cp ${HCITOOL_TOOL_PATH}/0003-fix-compat-wordexp.patch $(BUILDROOT_DIR)/$(BUILDROOT_VER)/package/bluez5_utils/
 	cp ${MPV_PATCH_PATH}/0002-change-j1.patch $(BUILDROOT_DIR)/$(BUILDROOT_VER)/package/mpv/
+	cp -r $(SYSDRV_DIR)/tools/board/buildroot/gustavd $(BUILDROOT_DIR)/$(BUILDROOT_VER)/package/
 
 buildroot: prepare
 	@echo -e "$(C_GREEN) ==sysdrv== build buildroot   $(C_NORMAL)"
@@ -621,6 +622,9 @@ buildroot: prepare
 		cp ${HCITOOL_TOOL_PATH}/0002-Fix-build-errors.patch $(BUILDROOT_DIR)/$(BUILDROOT_VER)/package/bluez5_utils/ ;\
 		cp ${HCITOOL_TOOL_PATH}/0003-fix-compat-wordexp.patch $(BUILDROOT_DIR)/$(BUILDROOT_VER)/package/bluez5_utils/ ;\
 		cp ${MPV_PATCH_PATH}/0002-change-j1.patch $(BUILDROOT_DIR)/$(BUILDROOT_VER)/package/mpv/ ;\
+		cp -r $(SYSDRV_DIR)/tools/board/buildroot/gustavd $(BUILDROOT_DIR)/$(BUILDROOT_VER)/package/ ;\
+		cp -fv $(SYSDRV_DIR)/tools/board/buildroot/patches/*.patch $(SYSDRV_DIR)/tools/board/buildroot/buildroot.patch.sh $(BUILDROOT_DIR)/$(BUILDROOT_VER)/;\
+		pushd $(BUILDROOT_DIR)/$(BUILDROOT_VER)/;$(SHELL) ./buildroot.patch.sh ;\
 	);
 
 	$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) $(BUILDROOT_DEFCONFIG) -C $(BUILDROOT_DIR)/$(BUILDROOT_VER) 
