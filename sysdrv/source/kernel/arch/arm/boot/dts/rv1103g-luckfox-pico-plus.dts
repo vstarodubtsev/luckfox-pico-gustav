@@ -87,6 +87,12 @@
 	status = "disabled";
 };
 
+&uart5 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart5m0_xfer>;
+};
+
 /**********PWM**********/
 /* PWM1_M0 */
 &pwm1 {
