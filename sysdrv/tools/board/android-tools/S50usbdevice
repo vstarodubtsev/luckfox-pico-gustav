@@ -73,6 +73,7 @@ configfs_init()
 	echo "Debug: configfs_init"
 	mkdir /dev/usb-ffs
 
+	mount -t debugfs none_debugs /sys/kernel/debug
 	mount -t configfs none ${CONFIGFS_DIR}
 	mkdir ${USB_CONFIGFS_DIR} -m 0770
 	echo 0x1e0e > ${USB_CONFIGFS_DIR}/idVendor

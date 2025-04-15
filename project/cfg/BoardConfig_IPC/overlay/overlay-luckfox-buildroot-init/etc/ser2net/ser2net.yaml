@@ -1,0 +1,41 @@
+#defines:
+#   banner1: Connected to port \N(\d)\r\n
+
+default:
+   name: speed
+   value: 115200n81
+
+connection: &port1
+   accepter: telnet(rfc2217),tcp,4001
+   connector: serialdev,/dev/ttyS4,local
+#   options:
+#     banner: =(banner1)
+
+connection: &port2
+   accepter: telnet(rfc2217),tcp,4002
+   connector: serialdev,/dev/ttyS3,local
+
+connection: &port3
+   accepter: telnet(rfc2217),tcp,4003
+   connector: serialdev,/dev/ttyS1,local
+
+connection: &port4
+   accepter: telnet(rfc2217),tcp,4004
+   connector: serialdev,/dev/ttyS0,local
+
+connection: &port5
+   accepter: telnet(rfc2217),tcp,4005
+   connector: serialdev,/dev/ttyUSB0,local
+
+connection: &port6
+   accepter: telnet(rfc2217),tcp,4006
+   connector: serialdev,/dev/ttyUSB1,local
+
+connection: &port7
+   accepter: telnet(rfc2217),tcp,4007
+   connector: serialdev,/dev/ttyUSB2,local
+
+connection: &port8
+   accepter: telnet(rfc2217),tcp,4008
+   connector: serialdev,/dev/ttyUSB3,local
+
