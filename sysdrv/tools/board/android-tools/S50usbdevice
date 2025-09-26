@@ -17,6 +17,16 @@ UVC_EN=off
 RNDIS_EN=on
 HID_EN=off
 
+MANUFACTURER="Slomblobov"
+#PRODUCT="Gustav"
+#ID_VENDOR=0x1e0e
+#ID_PRODUCT=0x9011
+#TTY_INDEX=2
+PRODUCT="Gustav 5G"
+ID_VENDOR=0x2c7c
+ID_PRODUCT=0x0900
+TTY_INDEX=3
+
 USB_ATTRIBUTE=0x409
 USB_GROUP=rockchip
 USB_SKELETON=b.1
@@ -66,6 +76,7 @@ function_init()
 	mkdir ${USB_FUNCTIONS_DIR}/hid.usb0
 	mkdir ${USB_FUNCTIONS_DIR}/gser.0
 	mkdir ${USB_FUNCTIONS_DIR}/gser.1
+	mkdir ${USB_FUNCTIONS_DIR}/gser.2
 }
 
 configfs_init()
@@ -75,7 +86,7 @@ configfs_init()
 
 	mount -t configfs none ${CONFIGFS_DIR}
 	mkdir ${USB_CONFIGFS_DIR} -m 0770
-	echo 0x1e0e > ${USB_CONFIGFS_DIR}/idVendor
+	echo ${ID_VENDOR} > ${USB_CONFIGFS_DIR}/idVendor
 	echo 0x0310 > ${USB_CONFIGFS_DIR}/bcdDevice
 	echo 0x0200 > ${USB_CONFIGFS_DIR}/bcdUSB
 	mkdir ${USB_STRINGS_DIR}   -m 0770
@@ -84,8 +95,8 @@ configfs_init()
 		SERIAL=0123456789ABCDEF
 	fi
 	echo $SERIAL > ${USB_STRINGS_DIR}/serialnumber
-	echo "Slomblobov"  > ${USB_STRINGS_DIR}/manufacturer
-	echo "Gustav"  > ${USB_STRINGS_DIR}/product
+	echo $MANUFACTURER  > ${USB_STRINGS_DIR}/manufacturer
+	echo $PRODUCT  > ${USB_STRINGS_DIR}/product
 
 	function_init
 
@@ -238,7 +249,7 @@ pre_run_binary()
 		# Not start app here
 	fi
 
-	start-stop-daemon --start --quiet --background --exec /usr/sbin/gustavd /dev/ttyGS2
+	start-stop-daemon --start --quiet --background --exec /usr/sbin/gustavd /dev/ttyGS${TTY_INDEX}
 
 	# Add uvc app here with start-stop-daemon
 }
@@ -342,6 +353,7 @@ bind_functions()
 	test $RNDIS_EN = on && syslink_function rndis.gs0
 	syslink_function gser.0
 	syslink_function gser.1
+	syslink_function gser.2
 	test $MTP_EN = on && syslink_function mtp.gs0
 	test $NTB_EN = on && syslink_function ffs.ntb
 	test $ADB_EN = on && syslink_function ffs.adb
@@ -424,7 +436,7 @@ start)
 	test -d ${USB_CONFIGFS_DIR} || configfs_init
 	use_os_desc
 #	echo $PID > ${USB_CONFIGFS_DIR}/idProduct
-	echo 0x9011 > ${USB_CONFIGFS_DIR}/idProduct
+	echo $ID_PRODUCT > ${USB_CONFIGFS_DIR}/idProduct
 	bind_functions
 	pre_run_binary
 
