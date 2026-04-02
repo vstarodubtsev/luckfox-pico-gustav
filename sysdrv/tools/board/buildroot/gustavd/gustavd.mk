@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-GUSTAVD_VERSION = 1.5.2.1
+GUSTAVD_VERSION = 1.5.3
 GUSTAVD_SITE = https://github.com/vstarodubtsev/gustavd/archive/$(GUSTAVD_VERSION)
 GUSTAVD_LICENSE = GPL-2.0
 GUSTAVD_LICENSE_FILES = COPYING
